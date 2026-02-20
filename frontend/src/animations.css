@@ -1,0 +1,112 @@
+/* ===== FADE ANIMATION ===== */
+.fade-in {
+  animation: fade 0.6s ease-in-out;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== GLOBAL BACKGROUND ===== */
+body{
+  background: linear-gradient(135deg, #020617, #0f172a, #1e293b);
+  color:white;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ===== INPUT ===== */
+input{
+  transition:0.3s;
+}
+
+input:focus{
+  outline:none;
+  box-shadow:0 0 10px #2563eb;
+}
+
+/* ===== BUTTON ===== */
+button{
+  background: linear-gradient(90deg,#2563eb,#4f46e5);
+  border:none;
+  color:white;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 15px #38bdf8;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  background: linear-gradient(180deg,#020617,#020617,#0f172a);
+  box-shadow:0 0 20px rgba(37,99,235,0.6);
+}
+
+/* ===== HEADINGS ===== */
+h2{
+  background: linear-gradient(90deg,#38bdf8,#6366f1);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.dashboard-cards{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.card-box{
+  background:#0f172a;
+  color:white;
+  padding:25px;
+  width:200px;
+  border-radius:12px;
+  box-shadow:0 0 20px rgba(37,99,235,0.4);
+  text-align:center;
+  transition:0.3s;
+}
+
+.card-box:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 25px #2563eb;
+}
+
+.card-title{
+  font-size:18px;
+}
+
+.card-value{
+  font-size:32px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+/* ===== TABLE ===== */
+table{
+  border-collapse:collapse;
+  width:100%;
+  margin-top:20px;
+}
+
+th{
+  background:#1e293b;
+  padding:10px;
+}
+
+td{
+  padding:8px;
+  background:#020617;
+}
