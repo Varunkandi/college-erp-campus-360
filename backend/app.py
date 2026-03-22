@@ -2,7 +2,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import mysql.connector
+import sqlite3 
 
 app = Flask(__name__)
 CORS(app)
@@ -11,13 +11,12 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 # ======================
 # DATABASE CONNECTION
 # ======================
+
 def get_db():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="varun123",
-        database="college_erp"
-    )
+    conn = sqlite3.connect("college.db")
+    conn.row_factory = sqlite3.Row
+    return conn
+
 
 # ======================
 # HOME
@@ -33,7 +32,7 @@ def home():
 def login():
     db = get_db()
     data = request.json
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor()
 
     cursor.execute(
         "SELECT id, username, role FROM users WHERE username=%s AND password=%s",
@@ -865,9 +864,16 @@ def delete_exam(id):
 
     return jsonify({"message":"Exam removed"})
 
+#temp
+with get_db() as db:
+    cursor = db.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS test(id INTEGER)")
+    db.commit()
 
 # ======================
 # RUN SERVER
 # ======================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+    
