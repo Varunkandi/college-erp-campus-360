@@ -5,7 +5,7 @@ function AdminFacultyList() {
   const [faculty, setFaculty] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/all_faculty")
+    fetch("http://192.168.1.13:5000/all_faculty")
       .then(res => res.json())
       .then(data => setFaculty(data));
   }, []);
@@ -15,7 +15,7 @@ function AdminFacultyList() {
 
     try {
       const res = await fetch(
-        `http://127.0.0.1:5000/delete_faculty/${userId}`,
+        `http://192.168.1.13:5000/delete_faculty/${userId}`,
         { method: "DELETE" }
       );
 

@@ -12,7 +12,7 @@ function MyAttendance() {
   const [percentage, setPercentage] = useState(0);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/student_attendance_report/${userId}`)
+    fetch(`http://192.168.1.13:5000/student_attendance_report/${userId}`)
       .then(res => res.json())
       .then(data => {
         const map = {};

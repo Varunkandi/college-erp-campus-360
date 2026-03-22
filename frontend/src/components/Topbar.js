@@ -5,7 +5,7 @@ function Topbar() {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/notifications/${role}`)
+    fetch(`http://192.168.1.13:5000/notifications/${role}`)
       .then(res => res.json())
       .then(data => setNotes(data));
   }, [role]);

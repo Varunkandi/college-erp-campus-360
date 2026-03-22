@@ -9,7 +9,7 @@ function AdminAttendance() {
   const [records, setRecords] = useState({});
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/student_list")
+    fetch("http://192.168.1.13:5000/student_list")
       .then(res => res.json())
       .then(data => setStudents(data));
   }, []);
@@ -45,7 +45,7 @@ function AdminAttendance() {
       });
     });
 
-    fetch("http://127.0.0.1:5000/admin_add_attendance", {
+    fetch("http://192.168.1.13:5000/admin_add_attendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ date, records: payload })

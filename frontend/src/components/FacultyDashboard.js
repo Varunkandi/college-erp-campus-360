@@ -7,7 +7,7 @@ function FacultyDashboard(){
   const [count,setCount]=useState(0);
 
   useEffect(()=>{
-    fetch("http://127.0.0.1:5000/counts")
+    fetch("http://192.168.1.13:5000/counts")
       .then(res=>res.json())
       .then(data=>setCount(data.students))
       .catch(()=>{});

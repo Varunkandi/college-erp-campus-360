@@ -14,7 +14,7 @@ function AdminEvents() {
 
   // load all events
   useEffect(()=>{
-    fetch("http://127.0.0.1:5000/events/everyone")
+    fetch("http://192.168.1.13:5000/events/everyone")
       .then(res=>res.json())
       .then(data=>setEvents(data));
   },[]);
@@ -33,7 +33,7 @@ function AdminEvents() {
     formData.append("role",role);
     if(file) formData.append("file",file);
 
-    fetch("http://127.0.0.1:5000/add_event",{
+    fetch("http://192.168.1.13:5000/add_event",{
       method:"POST",
       body:formData
     })
@@ -47,7 +47,7 @@ function AdminEvents() {
   const remove=(id)=>{
     if(!window.confirm("Delete event?")) return;
 
-    fetch(`http://127.0.0.1:5000/delete_event/${id}`,{
+    fetch(`http://192.168.1.13:5000/delete_event/${id}`,{
       method:"DELETE"
     })
     .then(res=>res.json())
@@ -107,7 +107,7 @@ function AdminEvents() {
                 <td>{e.role}</td>
                 <td>
                   {e.file &&
-                    <a href={`http://127.0.0.1:5000/uploads/${e.file}`}
+                    <a href={`http://192.168.1.13:5000/uploads/${e.file}`}
                        target="_blank" rel="noreferrer">
                       View
                     </a>}

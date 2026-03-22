@@ -11,14 +11,14 @@ function ManageExams(){
 
   // load exams
   useEffect(()=>{
-    fetch("http://127.0.0.1:5000/exams")
+    fetch("http://192.168.1.13:5000/exams")
       .then(res=>res.json())
       .then(data=>setExams(data));
   },[]);
 
   // add exam
   const addExam=()=>{
-    fetch("http://127.0.0.1:5000/add_exam",{
+    fetch("http://192.168.1.13:5000/add_exam",{
       method:"POST",
       headers:{ "Content-Type":"application/json"},
       body:JSON.stringify({
@@ -36,7 +36,7 @@ function ManageExams(){
 
   // delete exam
   const remove=(id)=>{
-    fetch("http://127.0.0.1:5000/delete_exam/"+id,{
+    fetch("http://192.168.1.13:5000/delete_exam/"+id,{
       method:"DELETE"
     })
     .then(res=>res.json())

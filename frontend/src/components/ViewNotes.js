@@ -5,7 +5,7 @@ function ViewNotes() {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/notes")
+    fetch("http://192.168.1.13:5000/notes")
       .then(res => res.json())
       .then(data => setNotes(data));
   }, []);
@@ -31,7 +31,7 @@ function ViewNotes() {
                 <td>{n.subject}</td>
                 <td>
                   <a
-                    href={`http://127.0.0.1:5000/uploads/${n.filename}`}
+                    href={`http://192.168.1.13:5000/uploads/${n.filename}`}
                     target="_blank"
                     rel="noreferrer"
                   >

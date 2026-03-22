@@ -6,7 +6,7 @@ function ViewFee() {
   const [fee, setFee] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/fee/" + userId)
+    fetch("http://192.168.1.13:5000/fee/" + userId)
       .then(res => res.json())
       .then(data => setFee(data))
       .catch(() => alert("Failed to load fee details"));

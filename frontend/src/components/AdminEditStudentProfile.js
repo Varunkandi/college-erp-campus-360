@@ -11,7 +11,7 @@ function AdminEditStudentProfile() {
   useEffect(() => {
     if (!uid) return;
 
-    fetch(`http://127.0.0.1:5000/student_profile/${uid}`)
+    fetch(`http://192.168.1.13:5000/student_profile/${uid}`)
       .then(res => {
         if (!res.ok) throw new Error();
         return res.json();
@@ -35,7 +35,7 @@ function AdminEditStudentProfile() {
       return;
     }
 
-    fetch(`http://127.0.0.1:5000/update_student_profile/${uid}`, {
+    fetch(`http://192.168.1.13:5000/update_student_profile/${uid}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)

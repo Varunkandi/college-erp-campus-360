@@ -12,7 +12,7 @@ function DailyAttendance(){
   const role = localStorage.getItem("role");
 
   useEffect(()=>{
-    fetch("http://127.0.0.1:5000/student_list")
+    fetch("http://192.168.1.13:5000/student_list")
       .then(res=>res.json())
       .then(data=>setStudents(data));
   },[]);
@@ -37,7 +37,7 @@ function DailyAttendance(){
       })
     })
 
-    fetch("http://127.0.0.1:5000/save_attendance",{
+    fetch("http://192.168.1.13:5000/save_attendance",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({

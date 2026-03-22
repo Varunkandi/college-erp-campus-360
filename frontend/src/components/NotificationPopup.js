@@ -7,7 +7,7 @@ function Events(){
   const [events,setEvents]=useState([]);
 
   useEffect(()=>{
-    fetch(`http://127.0.0.1:5000/events/${role}`)
+    fetch(`http://192.168.1.13:5000/events/${role}`)
       .then(res=>res.json())
       .then(data=>setEvents(data));
   },[role]);
@@ -30,7 +30,7 @@ function Events(){
             <p><b>Date:</b> {e.event_date}</p>
 
             {e.file &&
-              <a href={`http://127.0.0.1:5000/uploads/${e.file}`}
+              <a href={`http://192.168.1.13:5000/uploads/${e.file}`}
                  target="_blank" rel="noreferrer">
                 View Attachment
               </a>}

@@ -18,7 +18,7 @@ function EventsManager() {
   }, []);
 
   const loadEvents = () => {
-    fetch("http://127.0.0.1:5000/events")
+    fetch("http://192.168.1.13:5000/events")
       .then(res => res.json())
       .then(data => setEvents(data))
       .catch(() => alert("Failed to load events"));
@@ -41,7 +41,7 @@ function EventsManager() {
 
     if (file) formData.append("file", file);
 
-    fetch("http://127.0.0.1:5000/add_event", {
+    fetch("http://192.168.1.13:5000/add_event", {
       method: "POST",
       body: formData
     })
@@ -61,7 +61,7 @@ function EventsManager() {
   const deleteEvent = (id) => {
     if (!window.confirm("Delete this event?")) return;
 
-    fetch(`http://127.0.0.1:5000/delete_event/${id}`, {
+    fetch(`http://192.168.1.13:5000/delete_event/${id}`, {
       method: "DELETE"
     })
       .then(res => res.json())
@@ -130,7 +130,7 @@ function EventsManager() {
                 <td>
                   {e.file && (
                     <a
-                      href={`http://127.0.0.1:5000/uploads/${e.file}`}
+                      href={`http://192.168.1.13:5000/uploads/${e.file}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
