@@ -5,7 +5,7 @@ function EventsViewer() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    fetch("http://192.168.1.13:5000/events")
+    fetch("https://college-erp-backend-360.onrender.com/events")
       .then(res => res.json())
       .then(data => setEvents(data));
   }, []);
@@ -25,7 +25,7 @@ function EventsViewer() {
 
             {e.file && (
               <a
-                href={`http://192.168.1.13:5000/uploads/${e.file}`}
+                href={`https://college-erp-backend-360.onrender.com/uploads/${e.file}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

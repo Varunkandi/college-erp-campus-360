@@ -8,7 +8,7 @@ function AdminStudentList() {
 
   // Load all students
   useEffect(() => {
-    fetch("http://192.168.1.13:5000/all_students")
+    fetch("https://college-erp-backend-360.onrender.com/all_students")
       .then(res => res.json())
       .then(data => setStudents(data))
       .catch(() => alert("Failed to load students"));
@@ -20,7 +20,7 @@ function AdminStudentList() {
 
   try {
     const res = await fetch(
-      `http://192.168.1.13:5000/delete_student/${userId}`,
+      `https://college-erp-backend-360.onrender.com/delete_student/${userId}`,
       { method: "DELETE" }
     );
 

@@ -12,7 +12,7 @@ function DailyAttendance(){
   const role = localStorage.getItem("role");
 
   useEffect(()=>{
-    fetch("http://192.168.1.13:5000/student_list")
+    fetch("https://college-erp-backend-360.onrender.com/student_list")
       .then(res=>res.json())
       .then(data=>setStudents(data));
   },[]);
@@ -37,7 +37,7 @@ function DailyAttendance(){
       })
     })
 
-    fetch("http://192.168.1.13:5000/save_attendance",{
+    fetch("https://college-erp-backend-360.onrender.com/save_attendance",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({

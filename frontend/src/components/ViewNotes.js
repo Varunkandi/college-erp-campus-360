@@ -5,7 +5,7 @@ function ViewNotes() {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
-    fetch("http://192.168.1.13:5000/notes")
+    fetch("https://college-erp-backend-360.onrender.com/notes")
       .then(res => res.json())
       .then(data => setNotes(data));
   }, []);
@@ -31,7 +31,7 @@ function ViewNotes() {
                 <td>{n.subject}</td>
                 <td>
                   <a
-                    href={`http://192.168.1.13:5000/uploads/${n.filename}`}
+                    href={`https://college-erp-backend-360.onrender.com/uploads/${n.filename}`}
                     target="_blank"
                     rel="noreferrer"
                   >

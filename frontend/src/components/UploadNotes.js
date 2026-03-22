@@ -8,7 +8,7 @@ function UploadNotes() {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
-    fetch(`http://192.168.1.13:5000/faculty_notes/${facultyId}`)
+    fetch(`https://college-erp-backend-360.onrender.com/faculty_notes/${facultyId}`)
       .then(res => res.json())
       .then(setNotes);
   }, [facultyId]);
@@ -21,7 +21,7 @@ function UploadNotes() {
     formData.append("subject", subject);
     formData.append("uploaded_by", facultyId);
 
-    await fetch("http://192.168.1.13:5000/upload_notes", {
+    await fetch("https://college-erp-backend-360.onrender.com/upload_notes", {
       method: "POST",
       body: formData
     });
@@ -33,7 +33,7 @@ function UploadNotes() {
   const removeNote = async (id) => {
     if (!window.confirm("Delete note?")) return;
 
-    await fetch(`http://192.168.1.13:5000/delete_note/${id}`, { method: "DELETE" });
+    await fetch(`https://college-erp-backend-360.onrender.com/delete_note/${id}`, { method: "DELETE" });
     setNotes(prev => prev.filter(n => n.id !== id));
   };
 
@@ -66,7 +66,7 @@ function UploadNotes() {
               <tr key={n.id}>
                 <td>{n.subject}</td>
                 <td>
-                  <a href={`http://192.168.1.13:5000/uploads/${n.filename}`} target="_blank" rel="noreferrer">
+                  <a href={`https://college-erp-backend-360.onrender.com/uploads/${n.filename}`} target="_blank" rel="noreferrer">
                     {n.filename}
                   </a>
                 </td>

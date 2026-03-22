@@ -9,11 +9,11 @@ function ViewAttendance(){
   const user_id = localStorage.getItem("user_id");
 
   useEffect(()=>{
-    fetch("http://192.168.1.13:5000/attendance/"+user_id)
+    fetch("https://college-erp-backend-360.onrender.com/attendance/"+user_id)
       .then(res=>res.json())
       .then(data=>setRecords(data));
 
-    fetch("http://192.168.1.13:5000/attendance_summary/"+user_id)
+    fetch("https://college-erp-backend-360.onrender.com/attendance_summary/"+user_id)
       .then(res=>res.json())
       .then(data=>setSummary(data));
   },[])

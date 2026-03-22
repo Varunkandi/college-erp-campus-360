@@ -6,7 +6,7 @@ function ViewExams(){
   const [exams,setExams]=useState([]);
 
   useEffect(()=>{
-    fetch("http://192.168.1.13:5000/exams")
+    fetch("https://college-erp-backend-360.onrender.com/exams")
       .then(res=>res.json())
       .then(data=>setExams(data));
   },[]);

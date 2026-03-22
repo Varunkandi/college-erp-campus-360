@@ -5,7 +5,7 @@ function AdminFacultyList() {
   const [faculty, setFaculty] = useState([]);
 
   useEffect(() => {
-    fetch("http://192.168.1.13:5000/all_faculty")
+    fetch("https://college-erp-backend-360.onrender.com/all_faculty")
       .then(res => res.json())
       .then(data => setFaculty(data));
   }, []);
@@ -15,7 +15,7 @@ function AdminFacultyList() {
 
     try {
       const res = await fetch(
-        `http://192.168.1.13:5000/delete_faculty/${userId}`,
+        `https://college-erp-backend-360.onrender.com/delete_faculty/${userId}`,
         { method: "DELETE" }
       );
 

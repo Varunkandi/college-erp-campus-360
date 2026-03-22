@@ -7,7 +7,7 @@ function StudentList(){
   const [search,setSearch]=useState("");
 
   useEffect(()=>{
-    fetch("http://192.168.1.13:5000/all_students")
+    fetch("https://college-erp-backend-360.onrender.com/all_students")
       .then(res=>res.json())
       .then(data=>setStudents(data));
   },[])

@@ -7,7 +7,7 @@ function Login() {
   const navigate = useNavigate();
 
   const login = () => {
-    fetch("http://192.168.1.13:5000/login", {
+    fetch("https://college-erp-backend-360.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })

@@ -7,7 +7,7 @@ function MyMarks() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`http://192.168.1.13:5000/marks/${userId}`)
+    fetch(`https://college-erp-backend-360.onrender.com/marks/${userId}`)
       .then(res => {
         if (!res.ok) throw new Error("Failed to load marks");
         return res.json();

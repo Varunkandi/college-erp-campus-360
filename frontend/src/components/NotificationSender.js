@@ -9,7 +9,7 @@ function NotificationSender(){
 
   // LOAD EXISTING NOTIFICATIONS
   const loadNotifications=()=>{
-    fetch("http://192.168.1.13:5000/all_notifications")
+    fetch("https://college-erp-backend-360.onrender.com/all_notifications")
       .then(res=>res.json())
       .then(data=>setList(data))
       .catch(()=>alert("Failed to load notifications"));
@@ -19,7 +19,7 @@ function NotificationSender(){
 
   // SEND NEW
   const send=()=>{
-    fetch("http://192.168.1.13:5000/send_notification",{
+    fetch("https://college-erp-backend-360.onrender.com/send_notification",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({
@@ -39,7 +39,7 @@ function NotificationSender(){
   const remove=(id)=>{
     if(!window.confirm("Delete this notification?")) return;
 
-    fetch(`http://192.168.1.13:5000/delete_notification/${id}`,{
+    fetch(`https://college-erp-backend-360.onrender.com/delete_notification/${id}`,{
       method:"DELETE"
     })
     .then(res=>res.json())

@@ -9,7 +9,7 @@ function FacultyAttendance() {
   const [records, setRecords] = useState({});
 
   useEffect(() => {
-    fetch("http://192.168.1.13:5000/student_list")
+    fetch("https://college-erp-backend-360.onrender.com/student_list")
       .then(res => res.json())
       .then(data => setStudents(data));
   }, []);
@@ -45,7 +45,7 @@ function FacultyAttendance() {
       });
     });
 
-    fetch("http://192.168.1.13:5000/faculty_add_attendance", {
+    fetch("https://college-erp-backend-360.onrender.com/faculty_add_attendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ date, records: payload })

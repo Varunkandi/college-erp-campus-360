@@ -9,7 +9,7 @@ function StudentDashboard() {
   const [profile, setProfile] = useState({});
 
   useEffect(() => {
-    fetch("http://192.168.1.13:5000/student_profile/" + userId)
+    fetch("https://college-erp-backend-360.onrender.com/student_profile/" + userId)
       .then(res => res.json())
       .then(data => setProfile(data))
       .catch(() => {});

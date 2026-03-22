@@ -10,7 +10,7 @@ function Notifications() {
 
   // Load notifications
   useEffect(() => {
-    fetch(`http://192.168.1.13:5000/notifications/${role}`)
+    fetch(`https://college-erp-backend-360.onrender.com/notifications/${role}`)
       .then(res => res.json())
       .then(data => setNotes(data));
   }, [role]);
@@ -22,7 +22,7 @@ function Notifications() {
       return;
     }
 
-    fetch("http://192.168.1.13:5000/add_notification", {
+    fetch("https://college-erp-backend-360.onrender.com/add_notification", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({
