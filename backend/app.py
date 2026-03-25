@@ -21,6 +21,7 @@ def init_db():
 
     db = sqlite3.connect("college.db")
     c = db.cursor()
+    
 
     c.execute("""
     CREATE TABLE IF NOT EXISTS users(
@@ -80,6 +81,15 @@ def init_db():
     student_id INTEGER,
     date TEXT,
     status TEXT
+    )
+    """)
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS notes(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subject TEXT,
+    filename TEXT,
+    uploaded_by TEXT
     )
     """)
 
@@ -373,11 +383,13 @@ def save_attendance():
     for row in data["records"]:
 
         db.execute(
-            "INSERT INTO attendance(student_id,date,status) VALUES(?,?,?)",
+            "INSERT INTO attendance(student_id,date,hour,status,marked_by) VALUES(?,?,?,?,?)",
             (
                 row["student_id"],
                 data["date"],
-                row["status"]
+                row.get("hour"),
+                row["status"],
+                data.get("role","admin")
             )
         )
 
@@ -416,6 +428,47 @@ def exams():
     db.close()
 
     return jsonify([dict(x) for x in data])
+
+@app.route("/upload_notes", methods=["POST"])
+def upload_notes():
+
+    db = get_db()
+
+    file = request.files["file"]
+    subject = request.form["subject"]
+    uploaded_by = request.form["uploaded_by"]
+
+    filename = secure_filename(file.filename)
+
+    file.save(os.path.join("uploads", filename))
+
+    db.execute(
+        "INSERT INTO notes(subject,filename,uploaded_by) VALUES(?,?,?)",
+        (subject, filename, uploaded_by)
+    )
+
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "ok"})
+
+@app.route("/notes")
+def get_notes():
+
+    db = get_db()
+
+    cur = db.execute(
+        "SELECT * FROM notes"
+    )
+
+    data = cur.fetchall()
+    db.close()
+
+    return jsonify([dict(x) for x in data])
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+    return send_from_directory("uploads", filename)
 
 
 # ---------------- RUN ----------------
