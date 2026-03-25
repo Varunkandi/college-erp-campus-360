@@ -9,9 +9,7 @@ CORS(app)
 
 app.config["UPLOAD_FOLDER"] = "uploads"
 
-# ----------------------
-# DB
-# ----------------------
+# ---------------- DB ----------------
 
 def get_db():
     conn = sqlite3.connect("college.db")
@@ -20,6 +18,7 @@ def get_db():
 
 
 def init_db():
+
     db = sqlite3.connect("college.db")
     c = db.cursor()
 
@@ -51,32 +50,32 @@ def init_db():
     """)
 
     c.execute("""
-    CREATE TABLE IF NOT EXISTS attendance(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        student_id INTEGER,
-        date TEXT,
-        status TEXT
-    )
-    """)
-
-    c.execute("""
-    CREATE TABLE IF NOT EXISTS marks(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        student_id INTEGER,
-        subject TEXT,
-        marks TEXT
-    )
-    """)
-
-    c.execute("""
     CREATE TABLE IF NOT EXISTS notifications(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         message TEXT,
-        role TEXT
+        target_role TEXT
     )
     """)
 
-    # default admin
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS events(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        description TEXT,
+        event_date TEXT,
+        file TEXT
+    )
+    """)
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS exams(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        subject TEXT,
+        exam_link TEXT
+    )
+    """)
+
+    # admin
     c.execute("SELECT * FROM users WHERE username=?", ("admin",))
     if not c.fetchone():
         c.execute(
@@ -90,26 +89,22 @@ def init_db():
 
 init_db()
 
-# ----------------------
-# HOME
-# ----------------------
+# ---------------- HOME ----------------
 
 @app.route("/")
 def home():
-    return "Backend Running Successfully"
+    return "Backend Running"
 
 
-# ----------------------
-# LOGIN
-# ----------------------
+# ---------------- LOGIN ----------------
 
 @app.route("/login", methods=["POST"])
 def login():
+
     db = get_db()
     data = request.json
 
-    cur = db.cursor()
-    cur.execute(
+    cur = db.execute(
         "SELECT id,username,role FROM users WHERE username=? AND password=?",
         (data["username"], data["password"])
     )
@@ -119,19 +114,18 @@ def login():
 
     if user:
         return jsonify(dict(user))
-    else:
-        return jsonify(None)
+
+    return jsonify(None)
 
 
-# ----------------------
-# ADD STUDENT
-# ----------------------
+# ---------------- ADD STUDENT ----------------
 
 @app.route("/add_student", methods=["POST"])
 def add_student():
 
     db = get_db()
     data = request.json
+
     cur = db.cursor()
 
     cur.execute(
@@ -139,30 +133,49 @@ def add_student():
         (data["username"], data["password"], "student")
     )
 
-    user_id = cur.lastrowid
-
-    fee = data.get("fee_due", 0)
+    uid = cur.lastrowid
 
     cur.execute(
         "INSERT INTO students(user_id,name,fee_due) VALUES(?,?,?)",
-        (user_id, data["name"], fee)
+        (uid, data["name"], data.get("fee_due", 0))
     )
 
     db.commit()
     db.close()
 
-    return jsonify({"msg": "student added"})
+    return jsonify({"message": "ok"})
 
 
-# ----------------------
-# ADD FACULTY
-# ----------------------
+# ---------------- ALL STUDENTS ----------------
+
+@app.route("/all_students")
+def all_students():
+
+    db = get_db()
+
+    cur = db.execute("""
+    SELECT users.id AS uid,
+           students.name,
+           users.username,
+           students.fee_due
+    FROM students
+    JOIN users ON users.id = students.user_id
+    """)
+
+    data = cur.fetchall()
+    db.close()
+
+    return jsonify([dict(x) for x in data])
+
+
+# ---------------- ADD FACULTY ----------------
 
 @app.route("/add_faculty", methods=["POST"])
 def add_faculty():
 
     db = get_db()
     data = request.json
+
     cur = db.cursor()
 
     cur.execute(
@@ -180,23 +193,22 @@ def add_faculty():
     db.commit()
     db.close()
 
-    return jsonify({"msg": "faculty added"})
+    return jsonify({"message": "ok"})
 
 
-# ----------------------
-# ALL STUDENTS
-# ----------------------
+# ---------------- ALL FACULTY ----------------
 
-@app.route("/all_students")
-def all_students():
+@app.route("/all_faculty")
+def all_faculty():
 
     db = get_db()
-    cur = db.cursor()
 
-    cur.execute("""
-    SELECT users.id, students.name, students.fee_due
-    FROM users
-    JOIN students ON users.id = students.user_id
+    cur = db.execute("""
+    SELECT users.id AS uid,
+           faculty.name,
+           faculty.subject
+    FROM faculty
+    JOIN users ON users.id = faculty.user_id
     """)
 
     data = cur.fetchall()
@@ -205,51 +217,7 @@ def all_students():
     return jsonify([dict(x) for x in data])
 
 
-# ----------------------
-# ATTENDANCE
-# ----------------------
-
-@app.route("/add_attendance", methods=["POST"])
-def add_attendance():
-
-    db = get_db()
-    data = request.json
-
-    db.execute(
-        "INSERT INTO attendance(student_id,date,status) VALUES(?,?,?)",
-        (data["student_id"], data["date"], data["status"])
-    )
-
-    db.commit()
-    db.close()
-
-    return jsonify({"msg": "ok"})
-
-
-# ----------------------
-# MARKS
-# ----------------------
-
-@app.route("/add_marks", methods=["POST"])
-def add_marks():
-
-    db = get_db()
-    data = request.json
-
-    db.execute(
-        "INSERT INTO marks(student_id,subject,marks) VALUES(?,?,?)",
-        (data["student_id"], data["subject"], data["marks"])
-    )
-
-    db.commit()
-    db.close()
-
-    return jsonify({"msg": "ok"})
-
-
-# ----------------------
-# FEE
-# ----------------------
+# ---------------- UPDATE FEE ----------------
 
 @app.route("/update_fee", methods=["POST"])
 def update_fee():
@@ -265,12 +233,52 @@ def update_fee():
     db.commit()
     db.close()
 
-    return jsonify({"msg": "ok"})
+    return jsonify({"message": "ok"})
 
 
-# ----------------------
-# NOTIFICATIONS
-# ----------------------
+# ---------------- EVENTS ----------------
+
+@app.route("/events")
+def events():
+
+    db = get_db()
+    cur = db.execute("SELECT * FROM events")
+
+    data = cur.fetchall()
+    db.close()
+
+    return jsonify([dict(x) for x in data])
+
+
+@app.route("/add_event", methods=["POST"])
+def add_event():
+
+    db = get_db()
+
+    title = request.form["title"]
+    description = request.form.get("description")
+    date = request.form["event_date"]
+
+    file = request.files.get("file")
+
+    filename = None
+
+    if file:
+        filename = secure_filename(file.filename)
+        file.save(os.path.join("uploads", filename))
+
+    db.execute(
+        "INSERT INTO events(title,description,event_date,file) VALUES(?,?,?,?)",
+        (title, description, date, filename)
+    )
+
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "ok"})
+
+
+# ---------------- NOTIFICATIONS ----------------
 
 @app.route("/send_notification", methods=["POST"])
 def send_notification():
@@ -279,14 +287,14 @@ def send_notification():
     data = request.json
 
     db.execute(
-        "INSERT INTO notifications(message,role) VALUES(?,?)",
-        (data["message"], data["role"])
+        "INSERT INTO notifications(message,target_role) VALUES(?,?)",
+        (data["message"], data["target_role"])
     )
 
     db.commit()
     db.close()
 
-    return jsonify({"msg": "sent"})
+    return jsonify({"message": "ok"})
 
 
 @app.route("/notifications/<role>")
@@ -295,7 +303,7 @@ def notifications(role):
     db = get_db()
 
     cur = db.execute(
-        "SELECT * FROM notifications WHERE role=? OR role='everyone'",
+        "SELECT * FROM notifications WHERE target_role=? OR target_role='everyone'",
         (role,)
     )
 
@@ -305,30 +313,38 @@ def notifications(role):
     return jsonify([dict(x) for x in data])
 
 
-# ----------------------
-# FILES
-# ----------------------
+# ---------------- EXAMS ----------------
 
-@app.route("/upload", methods=["POST"])
-def upload():
+@app.route("/add_exam", methods=["POST"])
+def add_exam():
 
-    file = request.files["file"]
+    db = get_db()
+    data = request.json
 
-    filename = secure_filename(file.filename)
+    db.execute(
+        "INSERT INTO exams(subject,exam_link) VALUES(?,?)",
+        (data["subject"], data["exam_link"])
+    )
 
-    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    db.commit()
+    db.close()
 
-    return jsonify({"file": filename})
-
-
-@app.route("/uploads/<name>")
-def files(name):
-    return send_from_directory("uploads", name)
+    return jsonify({"message": "ok"})
 
 
-# ----------------------
-# RUN
-# ----------------------
+@app.route("/exams")
+def exams():
+
+    db = get_db()
+    cur = db.execute("SELECT * FROM exams")
+
+    data = cur.fetchall()
+    db.close()
+
+    return jsonify([dict(x) for x in data])
+
+
+# ---------------- RUN ----------------
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
