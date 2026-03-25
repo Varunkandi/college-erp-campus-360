@@ -74,6 +74,14 @@ def init_db():
         exam_link TEXT
     )
     """)
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS attendance(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER,
+    date TEXT,
+    status TEXT
+    )
+    """)
 
     # admin
     c.execute("SELECT * FROM users WHERE username=?", ("admin",))
@@ -297,21 +305,6 @@ def send_notification():
     return jsonify({"message": "ok"})
 
 
-@app.route("/notifications/<role>")
-def notifications(role):
-
-    db = get_db()
-
-    cur = db.execute(
-        "SELECT * FROM notifications WHERE target_role=? OR target_role='everyone'",
-        (role,)
-    )
-
-    data = cur.fetchall()
-    db.close()
-
-    return jsonify([dict(x) for x in data])
-
 
 # ---------------- EXAMS ----------------
 
@@ -331,17 +324,6 @@ def add_exam():
 
     return jsonify({"message": "ok"})
 
-
-@app.route("/exams")
-def exams():
-
-    db = get_db()
-    cur = db.execute("SELECT * FROM exams")
-
-    data = cur.fetchall()
-    db.close()
-
-    return jsonify([dict(x) for x in data])
 
 # ---------------- dash count ----------------
 
