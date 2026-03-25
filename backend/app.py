@@ -58,14 +58,17 @@ def login():
     cursor = db.cursor()
 
     cursor.execute(
-        "SELECT id, username, role FROM users WHERE username=%s AND password=%s",
+        "SELECT id, username, role FROM users WHERE username=? AND password=?",
         (data["username"], data["password"])
     )
 
     user = cursor.fetchone()
     db.close()
-    return jsonify(user)
 
+    if user:
+        return jsonify(dict(user))
+    else:
+        return jsonify(None)
 
 # ======================
 # ADD STUDENT
