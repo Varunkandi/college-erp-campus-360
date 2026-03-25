@@ -85,7 +85,7 @@ def add_student():
 
     # create user
     cursor.execute(
-        "INSERT INTO users(username,password,role) VALUES(%s,%s,'student')",
+        "INSERT INTO users(username,password,role) VALUES(?,?,'student')",
         (data["username"], data["password"])
     )
 
@@ -99,7 +99,7 @@ def add_student():
             dob,gender,father_name,mother_name,
             address,nationality,religion,district,state
         )
-        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     """,(
         user_id,
         data.get("name"),
@@ -134,14 +134,14 @@ def add_faculty():
     cursor = db.cursor()
 
     cursor.execute(
-        "INSERT INTO users(username,password,role) VALUES(%s,%s,'faculty')",
+        "INSERT INTO users(username,password,role) VALUES(?,?,'faculty')",
         (data["username"], data["password"])
     )
 
     user_id = cursor.lastrowid
 
     cursor.execute(
-        "INSERT INTO faculty(user_id,name,subject) VALUES(%s,%s,%s)",
+        "INSERT INTO faculty(user_id,name,subject) VALUES(?,?,?)",
         (user_id, data["name"], data["subject"])
     )
 
@@ -159,7 +159,7 @@ def add_attendance():
     cursor = db.cursor()
 
     cursor.execute(
-        "INSERT INTO attendance(student_id,date,status) VALUES(%s,%s,%s)",
+        "INSERT INTO attendance(student_id,date,status) VALUES(?,?,?)",
         (data["student_id"], data["date"], data["status"])
     )
 
@@ -221,7 +221,7 @@ def view_fee(user_id):
     cursor = db.cursor(dictionary=True)
 
     cursor.execute(
-        "SELECT fee_due FROM students WHERE user_id=%s",
+        "SELECT fee_due FROM students WHERE user_id=?",
         (user_id,)
     )
 
@@ -240,7 +240,7 @@ def update_fee():
     cursor = db.cursor()
 
     cursor.execute(
-        "UPDATE students SET fee_due=%s WHERE user_id=%s",
+        "UPDATE students SET fee_due=? WHERE user_id=?",
         (data["fee_due"], data["student_id"])
     )
 
@@ -338,7 +338,7 @@ def upload_notes():
 
     cursor = db.cursor()
     cursor.execute(
-        "INSERT INTO notes(subject, filename, uploaded_by) VALUES(%s,%s,%s)",
+        "INSERT INTO notes(subject, filename, uploaded_by) VALUES(?,?,?)",
         (subject, filename, uploaded_by)
     )
 
@@ -463,7 +463,7 @@ def delete_student(user_id):
     db = get_db()
     cursor = db.cursor()
 
-    cursor.execute("DELETE FROM students WHERE user_id=%s", (user_id,))
+    cursor.execute("DELETE FROM students WHERE user_id=?", (user_id,))
     cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
 
     db.commit()
@@ -480,7 +480,7 @@ def delete_faculty(user_id):
     db = get_db()
     cursor = db.cursor()
 
-    cursor.execute("DELETE FROM faculty WHERE user_id=%s", (user_id,))
+    cursor.execute("DELETE FROM faculty WHERE user_id=?", (user_id,))
     cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
 
     db.commit()
@@ -547,7 +547,7 @@ def add_marks():
     cursor = db.cursor()
 
     cursor.execute(
-        "INSERT INTO marks(student_id,subject,marks) VALUES(%s,%s,%s)",
+        "INSERT INTO marks(student_id,subject,marks) VALUES(?,?,?)",
         (data["student_id"], data["subject"], data["marks"])
     )
 
@@ -616,7 +616,7 @@ def update_student_profile(user_id):
             religion=%s,
             district=%s,
             state=%s
-        WHERE user_id=%s
+        WHERE user_id=?
     """, (
         data.get("name"),
         data.get("register_no"),
@@ -652,7 +652,7 @@ def student_profile(user_id):
     cursor.execute("""
         SELECT *
         FROM students
-        WHERE user_id=%s
+        WHERE user_id=?
     """, (user_id,))
 
     data = cursor.fetchone()
@@ -849,7 +849,7 @@ def add_exam():
 
     cursor.execute("""
         INSERT INTO exams(subject, exam_link, created_by)
-        VALUES(%s,%s,%s)
+        VALUES(?,?,?)
     """, (
         data["subject"],
         data["exam_link"],
