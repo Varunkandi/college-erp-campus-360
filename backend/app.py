@@ -75,15 +75,19 @@ def init_db():
         exam_link TEXT
     )
     """)
+    
+    
     c.execute("""
     CREATE TABLE IF NOT EXISTS attendance(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER,
     date TEXT,
-    status TEXT
+    hour TEXT,
+    status TEXT,
+    marked_by TEXT
     )
-    """)
-
+""")
+    
     c.execute("""
     CREATE TABLE IF NOT EXISTS notes(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -380,23 +384,26 @@ def save_attendance():
     db = get_db()
     data = request.json
 
-    for row in data["records"]:
+    date = data.get("date")
+    role = data.get("role", "admin")
+
+    records = data.get("records", [])
+
+    for row in records:
+
+        student_id = row.get("student_id")
+        hour = row.get("hour")
+        status = row.get("status")
 
         db.execute(
             "INSERT INTO attendance(student_id,date,hour,status,marked_by) VALUES(?,?,?,?,?)",
-            (
-                row["student_id"],
-                data["date"],
-                row.get("hour"),
-                row["status"],
-                data.get("role","admin")
-            )
+            (student_id, date, hour, status, role)
         )
 
     db.commit()
     db.close()
 
-    return jsonify({"message": "ok"})
+    return jsonify({"message": "Attendance saved"})
 
 # ----------------  notifications ----------------
 
@@ -406,14 +413,22 @@ def notifications(role):
     db = get_db()
 
     cur = db.execute(
-        "SELECT * FROM notifications WHERE target_role=? OR target_role='everyone'",
-        (role,)
+        "SELECT id,message,target_role FROM notifications"
     )
 
-    data = cur.fetchall()
+    rows = cur.fetchall()
     db.close()
 
-    return jsonify([dict(x) for x in data])
+    result = []
+
+    for r in rows:
+        result.append({
+            "id": r["id"],
+            "message": r["message"],
+            "target_role": r["target_role"]
+        })
+
+    return jsonify(result)
 
 @app.route("/exams")
 def exams():
