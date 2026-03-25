@@ -412,23 +412,30 @@ def notifications(role):
 
     db = get_db()
 
-    cur = db.execute(
-        "SELECT id,message,target_role FROM notifications"
-    )
+    try:
+        cur = db.execute(
+            "SELECT id,message,target_role FROM notifications"
+        )
 
-    rows = cur.fetchall()
-    db.close()
+        rows = cur.fetchall()
 
-    result = []
+        data = []
 
-    for r in rows:
-        result.append({
-            "id": r["id"],
-            "message": r["message"],
-            "target_role": r["target_role"]
-        })
+        for r in rows:
+            data.append({
+                "id": r["id"],
+                "message": r["message"],
+                "target_role": r["target_role"]
+            })
 
-    return jsonify(result)
+        db.close()
+
+        return jsonify(data)
+
+    except Exception as e:
+
+        db.close()
+        return jsonify([])
 
 @app.route("/exams")
 def exams():
