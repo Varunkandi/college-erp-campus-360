@@ -343,6 +343,98 @@ def exams():
 
     return jsonify([dict(x) for x in data])
 
+# ---------------- dash count ----------------
+
+@app.route("/counts")
+def counts():
+
+    db = get_db()
+
+    cur1 = db.execute("SELECT COUNT(*) FROM students")
+    students = cur1.fetchone()[0]
+
+    cur2 = db.execute("SELECT COUNT(*) FROM faculty")
+    faculty = cur2.fetchone()[0]
+
+    db.close()
+
+    return jsonify({
+        "students": students,
+        "faculty": faculty
+    })
+
+@app.route("/student_list")
+def student_list():
+
+    db = get_db()
+
+    cur = db.execute("""
+    SELECT users.id AS uid,
+           students.id AS student_id,
+           students.name
+    FROM students
+    JOIN users ON users.id = students.user_id
+    """)
+
+    data = cur.fetchall()
+    db.close()
+
+    return jsonify([dict(x) for x in data])
+    
+
+@app.route("/save_attendance", methods=["POST"])
+def save_attendance():
+
+    db = get_db()
+    data = request.json
+
+    for row in data["records"]:
+
+        db.execute(
+            "INSERT INTO attendance(student_id,date,status) VALUES(?,?,?)",
+            (
+                row["student_id"],
+                data["date"],
+                row["status"]
+            )
+        )
+
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "ok"})
+
+# ----------------  notifications ----------------
+
+@app.route("/notifications/<role>")
+def notifications(role):
+
+    db = get_db()
+
+    cur = db.execute(
+        "SELECT * FROM notifications WHERE target_role=? OR target_role='everyone'",
+        (role,)
+    )
+
+    data = cur.fetchall()
+    db.close()
+
+    return jsonify([dict(x) for x in data])
+
+@app.route("/exams")
+def exams():
+
+    db = get_db()
+
+    cur = db.execute(
+        "SELECT id,subject,exam_link FROM exams"
+    )
+
+    data = cur.fetchall()
+    db.close()
+
+    return jsonify([dict(x) for x in data])
+
 
 # ---------------- RUN ----------------
 
