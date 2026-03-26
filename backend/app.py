@@ -52,9 +52,9 @@ def init_db():
 
     c.execute("""
     CREATE TABLE IF NOT EXISTS notifications(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        message TEXT,
-        target_role TEXT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    message TEXT,
+    target_role TEXT
     )
     """)
 
@@ -407,35 +407,44 @@ def save_attendance():
 
 # ----------------  notifications ----------------
 
+
 @app.route("/notifications/<role>")
 def notifications(role):
 
     db = get_db()
 
     try:
+
         cur = db.execute(
             "SELECT id,message,target_role FROM notifications"
         )
 
         rows = cur.fetchall()
 
-        data = []
+        result = []
 
         for r in rows:
-            data.append({
-                "id": r["id"],
-                "message": r["message"],
-                "target_role": r["target_role"]
-            })
+
+            if r["target_role"] == role or r["target_role"] == "everyone":
+
+                result.append({
+                    "id": r["id"],
+                    "message": r["message"],
+                    "target_role": r["target_role"]
+                })
 
         db.close()
 
-        return jsonify(data)
+        return jsonify(result)
 
     except Exception as e:
 
+        print("NOTIFICATION ERROR:", e)
+
         db.close()
+
         return jsonify([])
+    
 
 @app.route("/exams")
 def exams():
